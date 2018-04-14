@@ -23,6 +23,11 @@ public func configure(
     middlewares.use(DateMiddleware.self) // Adds `Date` header to responses
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     services.register(middlewares)
+    
+    //REVERT DATABASE WHEN COLUMNS NEED ADDED - NOT FOR PRODUCTION
+    //var commandConfig = CommandConfig.default()
+    //commandConfig.use(RevertCommand.self, as: "revert")
+    //services.register(commandConfig)
 
     // Configure a SQLite database
     var databases = DatabaseConfig()
@@ -38,6 +43,7 @@ public func configure(
 
     /// Configure migrations
     var migrations = MigrationConfig()
+    migrations.add(model: User.self, database: .psql)
     migrations.add(model: Acronym.self, database: .psql)
     services.register(migrations)
 
